@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Aura — Connect, Share, and Discover Moments</title>
+  <meta name="description" content="Aura is the next-generation social network for sharing photos, short videos (Reels), real-time stories, and direct messages." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e1306c'><rect width='24' height='24' rx='6'/><circle cx='12' cy='12' r='4' fill='white'/></svg>" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/reels.css" />
+  <link rel="stylesheet" href="css/stories.css" />
+  <link rel="stylesheet" href="css/direct.css" />
+  <link rel="stylesheet" href="css/modals.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <script>
+    const savedTheme = localStorage.getItem('aura_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+
+  <script>
+    if (window.location.protocol === 'file:') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#2d6a4f,#1b4332);color:#fff;padding:10px 16px;text-align:center;font-weight:500;font-size:13px;z-index:999999;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;gap:10px;font-family:sans-serif;';
+        banner.innerHTML = '<span>💡 <strong>Tip:</strong> Modern browsers require an HTTP server for ES modules. Open via VS Code <em>Live Server</em> or host on GitHub Pages / Vercel.</span>';
+        document.body.prepend(banner);
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. AUTHENTICATION SCREEN (LOGIN & REGISTRATION)
+       ========================================================================= -->
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-container">
+      <!-- Phone Mockup Showcase -->
+      <div class="auth-phone-showcase">
+        <div class="phone-notch"></div>
+        <div class="phone-screen-content">
+          <div class="showcase-header">Aura</div>
+          <div class="showcase-post-card">
+            <div class="showcase-author">
+              <div class="showcase-author-avatar"></div>
+              <span>alex_creator</span>
+            </div>
+            <div class="showcase-media">✨</div>
+            <div class="showcase-meta">❤️ 1,284 likes · Golden hour vibes</div>
+          </div>
+          <div class="showcase-post-card">
+            <div class="showcase-author">
+              <div class="showcase-author-avatar"></div>
+              <span>auraofficial</span>
+            </div>
+            <div class="showcase-media" style="background: linear-gradient(135deg, #833ab4, #fd1d1d);">⚡</div>
+            <div class="showcase-meta">❤️ 3,492 likes · Welcome to Aura</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auth Forms Column -->
+      <div class="auth-forms-column">
+        <!-- Sign In Card -->
+        <div id="login-card" class="auth-card">
+          <h1 class="auth-logo-title">Aura</h1>
+          <form id="login-form" class="auth-form">
+            <input type="email" id="login-email" class="aura-input" placeholder="Email address" required />
+            <input type="password" id="login-password" class="aura-input" placeholder="Password" required />
+            <button type="submit" class="aura-btn aura-btn-primary auth-submit-btn">Log In</button>
+          </form>
+        </div>
+
+        <!-- Sign Up Card -->
+        <div id="signup-card" class="auth-card hidden">
+          <h1 class="auth-logo-title">Aura</h1>
+          <form id="signup-form" class="auth-form">
+            <input type="email" id="signup-email" class="aura-input" placeholder="Email address" required />
+            <input type="text" id="signup-fullname" class="aura-input" placeholder="Full Name" required />
+            <input type="text" id="signup-username" class="aura-input" placeholder="Username (letters & numbers)" required />
+            <input type="password" id="signup-password" class="aura-input" placeholder="Password (min 6 chars)" minlength="6" required />
+            <button type="submit" class="aura-btn aura-btn-primary auth-submit-btn">Sign Up</button>
+          </form>
+        </div>
+
+        <!-- Switch Card -->
+        <div class="auth-switch-card">
+          <span id="login-switch-prompt">Don't have an account? <a href="#" id="toggle-to-signup">Sign up</a></span>
+          <span id="signup-switch-prompt" class="hidden">Have an account? <a href="#" id="toggle-to-login">Log in</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. MAIN APP SHELL
+       ========================================================================= -->
+  <div id="app-shell" class="app-layout">
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-logo-wrap">
+          <a href="#" data-nav="feed" class="brand-logo">
+            <span class="brand-text-default">Aura</span>
+            <span class="bamboo-brand-logo" title="Aura Bamboo">
+              <svg class="bamboo-logo-svg" viewBox="0 0 160 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bamboo Branch & Leaves Left Node -->
+                <path d="M52 10 C 44 2, 32 -1, 20 2 C 32 6, 42 8, 52 10 Z" fill="#52b788" />
+                <path d="M53 8 C 48 -1, 38 -5, 28 -3 C 38 1, 46 4, 53 8 Z" fill="#74c69d" />
+                <path d="M54 13 C 44 14, 34 19, 26 27 C 36 23, 46 19, 54 13 Z" fill="#40916c" opacity="0.9" />
+                <!-- Bamboo Branch & Leaves Right Node -->
+                <path d="M112 10 C 120 2, 132 -1, 144 2 C 132 6, 122 8, 112 10 Z" fill="#52b788" />
+                <path d="M113 8 C 118 -1, 128 -5, 138 -3 C 128 1, 120 4, 113 8 Z" fill="#74c69d" />
+                <path d="M112 32 C 122 36, 134 38, 142 36 C 132 31, 122 30, 112 32 Z" fill="#40916c" opacity="0.85" />
+                <!-- Bamboo Culm Segment 1 (Left) -->
+                <rect x="6" y="10" width="46" height="22" rx="4" fill="#2d6a4f" />
+                <line x1="8" y1="13" x2="50" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                <!-- Joint / Node 1 -->
+                <rect x="49" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+                <rect x="50.5" y="9" width="3" height="24" rx="1.5" fill="#52b788" opacity="0.75" />
+                <!-- Bamboo Culm Segment 2 (Center - with wordmark on the bamboo) -->
+                <rect x="54" y="10" width="56" height="22" rx="3" fill="#2d6a4f" />
+                <line x1="56" y1="13" x2="108" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                <!-- Joint / Node 2 -->
+                <rect x="109" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+                <rect x="110.5" y="9" width="3" height="24" rx="1.5" fill="#52b788" opacity="0.75" />
+                <!-- Bamboo Culm Segment 3 (Right) -->
+                <rect x="114" y="10" width="40" height="22" rx="4" fill="#2d6a4f" />
+                <line x1="116" y1="13" x2="152" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+                <!-- Flat Design Vector Wordmark written on the Bamboo -->
+                <text x="82" y="27" font-family="'Grand Hotel', cursive" font-size="24" font-weight="700" fill="#f7f9f3" text-anchor="middle" letter-spacing="1">Aura</text>
+              </svg>
+            </span>
+          </a>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" data-nav="feed" class="nav-item active">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </span>
+            <span class="nav-label">Home</span>
+          </a>
+
+          <a href="#" data-nav="search" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span class="nav-label">Search</span>
+          </a>
+
+          <a href="reels.html" data-nav="reels" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+            </span>
+            <span class="nav-label">Reels</span>
+          </a>
+
+          <a href="messages.html" data-nav="messages" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </span>
+            <span class="nav-label">Messages</span>
+          </a>
+
+          <a href="#" data-nav="notifications" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+              </svg>
+            </span>
+            <span class="nav-label">Notifications</span>
+            <span id="notif-unread-badge" class="badge-dot" style="display:none;">1</span>
+          </a>
+
+          <a href="#" data-nav="create" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+            </span>
+            <span class="nav-label">Create</span>
+          </a>
+
+          <a href="#" data-nav="profile" class="nav-item">
+            <span class="nav-icon">
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=aura" alt="Avatar" class="sidebar-user-avatar" />
+            </span>
+            <span class="nav-label">Profile</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- More Menu Button -->
+      <div class="sidebar-bottom">
+        <a href="#" data-nav="more" class="nav-item" id="sidebar-more-btn">
+          <span class="nav-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </span>
+          <span class="nav-label">More</span>
+        </a>
+
+        <!-- Pop-up Menu -->
+        <div id="more-popup-menu" class="more-popup-menu">
+          <button class="menu-item" id="menu-toggle-bamboo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 3v18M17 3v18M7 9h10M7 15h10M17 6c2-2 4-2 4-2s0 2-2 4M7 12c-2-2-4-2-4-2s0 2 2 4M17 18c2-2 4-2 4-2s0 2-2 4"></path>
+            </svg>
+            <span id="menu-bamboo-label">Change to Bamboo theme</span>
+          </button>
+          <button class="menu-item" id="menu-toggle-theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            Switch Appearance
+          </button>
+          <button class="menu-item logout" id="menu-logout">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Top Bar -->
+    <header class="mobile-top-bar" id="mobile-top-bar">
+      <!-- Feed / Default Top Bar -->
+      <div class="mobile-top-bar-inner feed-bar-state">
+        <div class="mobile-brand-group">
+          <a href="#" data-nav="feed" class="brand-logo mobile-logo">
+            <span class="brand-text-default">Aura</span>
+            <span class="bamboo-brand-logo" title="Aura Bamboo">
+              <svg class="bamboo-logo-svg" viewBox="0 0 160 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M52 10 C 44 2, 32 -1, 20 2 C 32 6, 42 8, 52 10 Z" fill="#52b788" />
+                <path d="M53 8 C 48 -1, 38 -5, 28 -3 C 38 1, 46 4, 53 8 Z" fill="#74c69d" />
+                <path d="M112 10 C 120 2, 132 -1, 144 2 C 132 6, 122 8, 112 10 Z" fill="#52b788" />
+                <rect x="6" y="10" width="46" height="22" rx="4" fill="#2d6a4f" />
+                <rect x="49" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+                <rect x="54" y="10" width="56" height="22" rx="3" fill="#2d6a4f" />
+                <rect x="109" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+                <rect x="114" y="10" width="40" height="22" rx="4" fill="#2d6a4f" />
+                <text x="82" y="27" font-family="'Grand Hotel', cursive" font-size="24" font-weight="700" fill="#f7f9f3" text-anchor="middle" letter-spacing="1">Aura</text>
+              </svg>
+            </span>
+          </a>
+          <svg class="brand-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <div class="mobile-top-actions">
+          <button data-nav="notifications" class="mobile-header-btn" aria-label="Notifications">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+            </svg>
+            <span id="mobile-notif-unread-badge" class="badge-dot notif-dot" style="display:none;"></span>
+          </button>
+          <a href="messages.html" data-nav="messages" class="mobile-header-btn" aria-label="Messages">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span id="mobile-direct-unread-badge" class="badge-dot notif-dot" style="display:none;"></span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Bottom Bar -->
+    <nav class="mobile-bottom-bar" id="mobile-bottom-bar">
+      <!-- 1. Home -->
+      <button data-nav="feed" class="mobile-nav-btn active" aria-label="Home">
+        <svg class="icon-outline" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"></path>
+        </svg>
+        <svg class="icon-filled" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.1l9 7.2v11.7a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1V9.3l9-7.2z"></path>
+        </svg>
+      </button>
+
+      <!-- 2. Search -->
+      <button data-nav="search" class="mobile-nav-btn" aria-label="Search">
+        <svg class="icon-outline" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="7.5"></circle>
+          <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+        </svg>
+      </button>
+
+      <!-- 3. Create [+] -->
+      <button data-nav="create" class="mobile-nav-btn" aria-label="Create">
+        <svg class="icon-outline" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+          <line x1="12" y1="8" x2="12" y2="16" stroke-linecap="round"></line>
+          <line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"></line>
+        </svg>
+      </button>
+
+      <!-- 4. Reels -->
+      <a href="reels.html" data-nav="reels" class="mobile-nav-btn" aria-label="Reels">
+        <svg class="icon-outline" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect>
+          <path d="M16 2.5l-4 6M8 2.5l-4 6M12 8.5v13M2.5 8.5h19"></path>
+          <polygon points="10 12 15 15 10 18" fill="currentColor"></polygon>
+        </svg>
+        <svg class="icon-filled" width="25" height="25" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect>
+          <path d="M16 2.5l-4 6M8 2.5l-4 6M12 8.5v13M2.5 8.5h19" stroke="var(--bg-primary)" stroke-width="1.5"></path>
+          <polygon points="10 12 15 15 10 18" fill="var(--bg-primary)"></polygon>
+        </svg>
+      </a>
+
+      <!-- 5. Profile Avatar -->
+      <button data-nav="profile" class="mobile-nav-btn mobile-profile-nav-btn" aria-label="Profile">
+        <div class="mobile-avatar-frame">
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=aura" alt="Avatar" class="mobile-user-avatar" />
+        </div>
+      </button>
+    </nav>
+
+    <!-- Slide-out Search Drawer -->
+    <div id="search-drawer" class="slide-drawer">
+      <div class="drawer-header">
+        <h3>Search</h3>
+        <button id="search-drawer-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div class="search-input-wrap">
+        <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-drawer-input" class="aura-input" placeholder="Search people and #hashtags" />
+      </div>
+      <div id="search-results-list" class="search-results-list"></div>
+    </div>
+
+    <!-- Slide-out Notifications Drawer -->
+    <div id="notifications-drawer" class="slide-drawer">
+      <div class="drawer-header">
+        <h3>Notifications</h3>
+        <button id="notifications-drawer-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div id="notifications-list" class="notifications-list"></div>
+    </div>
+
+    <!-- =========================================================================
+         MAIN APPLICATION VIEWS
+         ========================================================================= -->
+    <main class="main-stage">
+      <!-- 1. FEED VIEW -->
+      <section id="view-feed" class="view-section active">
+        <div class="feed-layout-inner">
+          <!-- Stories Bar -->
+          <div class="stories-tray-container">
+            <div id="stories-tray" class="stories-tray"></div>
+          </div>
+          <!-- Posts Stream -->
+          <div id="feed-posts-container" class="feed-posts-container"></div>
+        </div>
+      </section>
+
+
+
+
+
+      <!-- 5. USER PROFILE VIEW -->
+      <section id="view-profile" class="view-section">
+        <div id="profile-view-container"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       3. MODALS AND OVERLAYS
+       ========================================================================= -->
+
+  <!-- A. FULLSCREEN STORY VIEWER MODAL -->
+  <div id="story-viewer-modal" class="story-viewer-modal">
+    <div class="story-viewer-container">
+      <!-- Segmented Top Progress Bars -->
+      <div id="story-progress-bars" class="story-progress-bars"></div>
+
+      <!-- Header -->
+      <div class="story-viewer-header">
+        <div class="story-header-user">
+          <img id="story-viewer-avatar" src="" class="story-viewer-avatar" />
+          <span id="story-viewer-username" class="story-viewer-username"></span>
+          <span id="story-viewer-time" class="story-viewer-time"></span>
+        </div>
+        <div class="story-header-actions">
+          <button id="story-viewer-delete-btn" class="story-icon-btn" style="display:none;" title="Delete Story">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+          <button id="story-viewer-close" class="story-icon-btn">✕</button>
+        </div>
+      </div>
+
+      <!-- Media Stage & Tap Zones -->
+      <div id="story-viewer-stage" class="story-viewer-stage">
+        <div id="story-tap-left" class="story-tap-zone story-tap-left"></div>
+        <div id="story-tap-right" class="story-tap-zone story-tap-right"></div>
+        <img id="story-image-player" class="story-image-player" style="display:none;" />
+        <video id="story-video-player" class="story-video-player" playsinline style="display:none;"></video>
+        <div id="story-viewer-caption" class="story-viewer-caption" style="display:none;"></div>
+      </div>
+
+      <!-- Footer: Reply & Quick Reactions -->
+      <div class="story-viewer-footer">
+        <div class="story-quick-reactions">
+          <button class="story-quick-react-btn">🔥</button>
+          <button class="story-quick-react-btn">❤️</button>
+          <button class="story-quick-react-btn">😂</button>
+          <button class="story-quick-react-btn">😮</button>
+          <button class="story-quick-react-btn">😢</button>
+          <button class="story-quick-react-btn">👏</button>
+        </div>
+        <div class="story-reply-form">
+          <input type="text" id="story-reply-input" class="story-reply-input" placeholder="Send message..." />
+          <button id="story-reply-send" class="story-reply-send-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B. CREATION STUDIO MODAL (Posts, Reels, Stories) -->
+  <div id="create-modal" class="aura-modal">
+    <div class="modal-content-box create-modal-container">
+      <div class="create-modal-header">
+        <button id="create-modal-back" class="create-nav-action-btn" style="display:none;">Back</button>
+        <button id="create-modal-close" class="drawer-close-btn create-close-icon" aria-label="Close">✕</button>
+        <div class="create-tabs-bar">
+          <button class="create-mode-tab active" data-mode="post">Post</button>
+          <button class="create-mode-tab" data-mode="reel">Reel</button>
+          <button class="create-mode-tab" data-mode="story">Story</button>
+        </div>
+        <span id="create-modal-title" class="create-header-title">Create new post</span>
+        <button id="create-modal-next" class="create-nav-action-btn" style="display:none;">Next</button>
+      </div>
+      <div id="create-modal-body" class="create-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- C. POST DETAIL & COMMENTS MODAL (Native Mobile Bottom Sheet) -->
+  <div id="post-detail-modal" class="aura-modal comments-sheet-modal">
+    <div class="modal-content-box post-detail-box">
+      <!-- Mobile Pull / Drag Indicator Handle -->
+      <div class="sheet-drag-handle" id="post-sheet-drag-handle"></div>
+
+      <div id="modal-post-media" class="modal-post-media-stage"></div>
+      <div class="modal-post-comments-panel">
+        <header id="modal-post-author" class="modal-comments-header">
+          <div class="comments-sheet-title">Comments</div>
+          <button id="modal-post-close-btn" class="drawer-close-btn" aria-label="Close">✕</button>
+        </header>
+        <div class="modal-comments-scroll" id="modal-comments-scroll">
+          <div id="modal-post-caption" class="modal-comment-row"></div>
+          <div id="modal-post-comments"></div>
+        </div>
+        <!-- Quick Emoji Bar -->
+        <div class="quick-emojis-bar" id="comments-quick-emojis">
+          <button type="button" class="quick-emoji-btn">❤️</button>
+          <button type="button" class="quick-emoji-btn">🙌</button>
+          <button type="button" class="quick-emoji-btn">🔥</button>
+          <button type="button" class="quick-emoji-btn">👏</button>
+          <button type="button" class="quick-emoji-btn">😢</button>
+          <button type="button" class="quick-emoji-btn">😍</button>
+          <button type="button" class="quick-emoji-btn">😮</button>
+          <button type="button" class="quick-emoji-btn">😂</button>
+        </div>
+        <footer class="sheet-footer">
+          <form id="modal-post-comment-form" class="post-comment-form">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=aura" class="comment-author-avatar mobile-user-avatar" id="modal-comment-user-avatar" />
+            <input type="text" id="modal-post-comment-input" class="comment-input" placeholder="Add a comment..." required />
+            <button type="submit" class="comment-submit-btn">Post</button>
+          </form>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- D. EDIT PROFILE MODAL -->
+  <div id="edit-profile-modal" class="aura-modal">
+    <div class="modal-content-box edit-profile-card">
+      <div class="create-modal-header" style="border:none; padding:0 0 16px 0;">
+        <span class="create-header-title">Edit Profile</span>
+        <button id="edit-profile-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div class="edit-profile-avatar-row">
+        <img id="edit-prof-avatar" src="" class="edit-prof-avatar-img" />
+        <div class="edit-prof-names">
+          <span id="edit-prof-username-label" class="edit-prof-username">Profile Photo</span>
+          <label class="change-photo-btn">
+            Change Photo (Cloudinary)
+            <input type="file" id="edit-prof-file" accept="image/*" style="display:none;" />
+          </label>
+        </div>
+      </div>
+      <form id="edit-profile-form" class="edit-profile-form">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="edit-prof-name" class="aura-input" placeholder="Your Name" />
+        </div>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="edit-prof-username" class="aura-input" placeholder="Username" required />
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="edit-prof-bio" class="aura-input" rows="3" maxlength="150" placeholder="Tell the Aura community about yourself..."></textarea>
+          <span id="edit-bio-count" class="char-counter">0/150</span>
+        </div>
+        <div class="form-group">
+          <label>Website</label>
+          <input type="url" id="edit-prof-website" class="aura-input" placeholder="https://yourwebsite.com" />
+        </div>
+        <button type="submit" class="aura-btn aura-btn-primary" style="margin-top:10px;">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- E. LIKES MODAL -->
+  <div id="likes-modal" class="aura-modal">
+    <div class="modal-content-box" style="width: 100%; max-width: 400px; max-height: 480px; padding: 16px;">
+      <div class="create-modal-header" style="border:none; padding: 0 0 12px 0;">
+        <span class="create-header-title">Likes</span>
+        <button class="drawer-close-btn modal-close-trigger">✕</button>
+      </div>
+      <div id="likes-modal-list" style="overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- F. FOLLOWERS / FOLLOWING MODAL -->
+  <div id="followers-modal" class="aura-modal">
+    <div class="modal-content-box" style="width: 100%; max-width: 400px; max-height: 480px; padding: 16px;">
+      <div class="create-modal-header" style="border:none; padding: 0 0 12px 0;">
+        <span id="followers-modal-title" class="create-header-title">Followers</span>
+        <button id="followers-modal-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div id="followers-modal-list" style="overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- G. POST OPTIONS MODAL -->
+  <div id="options-modal" class="aura-modal">
+    <div class="modal-content-box options-modal-box">
+      <div id="options-modal-list" class="options-modal-list"></div>
+    </div>
+  </div>
+
+  <!-- H. SHARE MODAL -->
+  <div id="share-modal" class="aura-modal">
+    <div class="modal-content-box" style="width: 100%; max-width: 420px; padding: 20px;">
+      <div class="create-modal-header" style="border:none; padding: 0 0 14px 0;">
+        <span class="create-header-title">Share Post</span>
+        <button class="drawer-close-btn modal-close-trigger">✕</button>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <input type="text" id="share-url-input" class="aura-input" readonly />
+        <button id="share-copy-btn" class="aura-btn aura-btn-primary">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- I. NEW DM COMPOSE MODAL -->
+  <div id="new-msg-modal" class="aura-modal">
+    <div class="modal-content-box" style="width: 100%; max-width: 440px; height: 500px; padding: 20px;">
+      <div class="create-modal-header" style="border:none; padding: 0 0 14px 0;">
+        <span class="create-header-title">New message</span>
+        <button id="new-msg-close-btn" class="drawer-close-btn">✕</button>
+      </div>
+      <div class="search-input-wrap" style="margin-bottom:12px;">
+        <input type="text" id="new-msg-search-input" class="aura-input" placeholder="Search people..." />
+      </div>
+      <div id="new-msg-users-list" style="overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- J. CALL SIMULATOR MODAL -->
+  <div id="call-simulation-modal" class="call-modal">
+    <div class="call-modal-container">
+      <!-- Remote Partner Stage -->
+      <div class="call-remote-stage">
+        <!-- Partner pulsating avatar in audio or connecting state -->
+        <div class="call-partner-display" id="call-partner-display">
+          <div class="call-avatar-pulse-wrap">
+            <img id="call-partner-avatar" src="" class="call-partner-avatar" />
+            <div class="call-pulse-ring"></div>
+          </div>
+          <h3 id="call-partner-name" class="call-partner-name">Calling...</h3>
+          <span id="call-status-label" class="call-status-label">Calling...</span>
+        </div>
+
+        <!-- Simulated Remote Video Feed -->
+        <div id="call-remote-video-wrap" class="call-remote-video-wrap" style="display:none;">
+          <div class="call-simulated-partner-feed">
+            <img id="call-remote-partner-bg" src="" class="call-partner-bg-img" />
+            <div class="call-partner-feed-overlay">
+              <span class="call-partner-badge" id="call-partner-video-name">user</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Local Camera Preview PiP (Picture-in-Picture) -->
+        <div id="call-local-pip" class="call-local-pip" style="display:none;">
+          <video id="call-local-video" playsinline muted autoplay></video>
+          <div class="call-pip-label">You</div>
+        </div>
+      </div>
+
+      <!-- Call Action Controls Toolbar -->
+      <div class="call-controls-toolbar">
+        <button id="call-toggle-mic-btn" class="call-action-btn" title="Mute/Unmute Mic" aria-label="Microphone">
+          <svg class="icon-mic-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <svg class="icon-mic-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+
+        <button id="call-toggle-cam-btn" class="call-action-btn" title="Turn Camera On/Off" aria-label="Camera">
+          <svg class="icon-cam-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          <svg class="icon-cam-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M21 15.5l-5-3.5v-3l5-3.5v10z"></path>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </button>
+
+        <button id="call-end-btn" class="call-end-btn" title="End Call" aria-label="End Call">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path>
+            <line x1="23" y1="1" x2="1" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Application Bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

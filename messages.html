@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Messages · Aura</title>
+  <meta name="description" content="Aura Direct - Fast, private messaging, photos, and calls with friends." />
+
+  <!-- Google Fonts (Instagram Aesthetic Typography) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Grand+Hotel&display=swap" rel="stylesheet" />
+
+  <!-- Core Design Tokens & Component Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/direct.css" />
+  <link rel="stylesheet" href="css/modals.css" />
+
+  <!-- Prevent FOUC Theme Script -->
+  <script>
+    const savedTheme = localStorage.getItem('aura_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</head>
+<body class="view-direct-active messages-standalone-page">
+
+  <!-- =========================================================================
+       1. AUTHENTICATION FALLBACK SCREEN
+       ========================================================================= -->
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-container">
+      <div class="auth-forms-column" style="max-width: 350px; margin: auto;">
+        <div id="login-card" class="auth-card">
+          <h1 class="auth-logo-title">Aura</h1>
+          <form id="login-form" class="auth-form">
+            <input type="email" id="login-email" class="aura-input" placeholder="Email address" required />
+            <input type="password" id="login-password" class="aura-input" placeholder="Password" required />
+            <button type="submit" class="aura-btn aura-btn-primary auth-submit-btn">Log In</button>
+          </form>
+        </div>
+        <div class="auth-switch-card">
+          <span>Don't have an account? <a href="index.html">Sign up on Aura</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. MESSAGES APP SHELL
+       ========================================================================= -->
+  <div id="app-shell" class="app-layout">
+
+    <!-- Desktop Navigation Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <a href="index.html" class="brand-logo" aria-label="Aura Home">
+          <span class="brand-text-default">Aura</span>
+          <span class="bamboo-brand-logo" title="Aura Bamboo">
+            <svg class="bamboo-logo-svg" viewBox="0 0 160 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M52 10 C 44 2, 32 -1, 20 2 C 32 6, 42 8, 52 10 Z" fill="#52b788" />
+              <path d="M53 8 C 48 -1, 38 -5, 28 -3 C 38 1, 46 4, 53 8 Z" fill="#74c69d" />
+              <path d="M54 13 C 44 14, 34 19, 26 27 C 36 23, 46 19, 54 13 Z" fill="#40916c" opacity="0.9" />
+              <path d="M112 10 C 120 2, 132 -1, 144 2 C 132 6, 122 8, 112 10 Z" fill="#52b788" />
+              <path d="M113 8 C 118 -1, 128 -5, 138 -3 C 128 1, 120 4, 113 8 Z" fill="#74c69d" />
+              <path d="M112 32 C 122 36, 134 38, 142 36 C 132 31, 122 30, 112 32 Z" fill="#40916c" opacity="0.85" />
+              <rect x="6" y="10" width="46" height="22" rx="4" fill="#2d6a4f" />
+              <line x1="8" y1="13" x2="50" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+              <rect x="49" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+              <rect x="50.5" y="9" width="3" height="24" rx="1.5" fill="#52b788" opacity="0.75" />
+              <rect x="54" y="10" width="56" height="22" rx="3" fill="#2d6a4f" />
+              <line x1="56" y1="13" x2="108" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+              <rect x="109" y="8" width="6" height="26" rx="3" fill="#1b4332" />
+              <rect x="110.5" y="9" width="3" height="24" rx="1.5" fill="#52b788" opacity="0.75" />
+              <rect x="114" y="10" width="40" height="22" rx="4" fill="#2d6a4f" />
+              <line x1="116" y1="13" x2="152" y2="13" stroke="#40916c" stroke-width="1.5" stroke-linecap="round" opacity="0.7" />
+              <text x="82" y="27" font-family="'Grand Hotel', cursive" font-size="24" font-weight="700" fill="#f7f9f3" text-anchor="middle" letter-spacing="1">Aura</text>
+            </svg>
+          </span>
+        </a>
+
+        <nav class="sidebar-nav">
+          <!-- 1. Home -->
+          <a href="index.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"></path>
+              </svg>
+            </span>
+            <span class="nav-label">Home</span>
+          </a>
+
+          <!-- 2. Search -->
+          <a href="#" id="sidebar-search-btn" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span class="nav-label">Search</span>
+          </a>
+
+          <!-- 3. Reels -->
+          <a href="reels.html" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+            </span>
+            <span class="nav-label">Reels</span>
+          </a>
+
+          <!-- 4. Messages (Active on this page) -->
+          <a href="messages.html" class="nav-item active">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 2L11 13"></path>
+                <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor"></polygon>
+              </svg>
+            </span>
+            <span class="nav-label">Messages</span>
+          </a>
+
+          <!-- 5. Notifications -->
+          <a href="#" id="sidebar-notif-btn" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+              </svg>
+            </span>
+            <span class="nav-label">Notifications</span>
+          </a>
+
+          <!-- 6. Create -->
+          <a href="#" id="sidebar-create-btn" class="nav-item">
+            <span class="nav-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="12" y1="8" x2="12" y2="16"></line>
+                <line x1="8" y1="12" x2="16" y2="12"></line>
+              </svg>
+            </span>
+            <span class="nav-label">Create</span>
+          </a>
+
+          <!-- 7. Profile -->
+          <a href="index.html?view=profile" class="nav-item">
+            <span class="nav-icon">
+              <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=aura" alt="Avatar" class="sidebar-user-avatar" />
+            </span>
+            <span class="nav-label">Profile</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <a href="#" class="nav-item" id="sidebar-more-btn">
+          <span class="nav-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </span>
+          <span class="nav-label">More</span>
+        </a>
+
+        <div id="more-popup-menu" class="more-popup-menu">
+          <button class="menu-item" id="menu-toggle-bamboo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 3v18M17 3v18M7 9h10M7 15h10M17 6c2-2 4-2 4-2s0 2-2 4M7 12c-2-2-4-2-4-2s0 2 2 4M17 18c2-2 4-2 4-2s0 2-2 4"></path>
+            </svg>
+            <span id="menu-bamboo-label">Change to Bamboo theme</span>
+          </button>
+          <button class="menu-item" id="menu-toggle-theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            Switch Appearance
+          </button>
+          <button class="menu-item logout" id="menu-logout">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Messages Layout Stage -->
+    <main class="main-stage">
+      <section id="view-direct" class="view-section active">
+        <div class="direct-container">
+          
+          <!-- Left: Conversations Inbox Pane -->
+          <div class="direct-sidebar-pane">
+            <header class="direct-sidebar-header">
+              <div class="direct-header-left-group">
+                <a href="index.html" class="direct-icon-btn direct-inbox-back-btn" aria-label="Back to feed">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </a>
+                <span class="direct-header-title current-user-username">messages</span>
+              </div>
+              <button class="direct-icon-btn" id="open-new-dm-btn" title="New message">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+            </header>
+
+            <!-- Search Conversations Input -->
+            <div style="padding: 10px 16px; border-bottom: 1px solid var(--border-subtle);">
+              <div class="search-input-wrap" style="margin-bottom: 0;">
+                <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="direct-filter-input" class="aura-input" placeholder="Search conversations..." style="font-size: 13px; padding-left: 36px;" />
+              </div>
+            </div>
+
+            <!-- Conversations List -->
+            <div id="direct-conversations-list" class="direct-conversations-list"></div>
+          </div>
+
+          <!-- Right: Active Chat Stream Pane -->
+          <div id="direct-active-chat-pane" class="direct-active-chat-pane"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar (Hidden when chat is active) -->
+    <nav class="mobile-bottom-bar" id="mobile-bottom-bar">
+      <!-- 1. Home -->
+      <a href="index.html" class="mobile-nav-btn" aria-label="Home">
+        <svg class="icon-outline" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1V9.5z"></path>
+        </svg>
+      </a>
+
+      <!-- 2. Search -->
+      <button id="mobile-search-trigger" class="mobile-nav-btn" aria-label="Search">
+        <svg class="icon-outline" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="7.5"></circle>
+          <line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+        </svg>
+      </button>
+
+      <!-- 3. Create [+] -->
+      <button id="mobile-create-trigger" class="mobile-nav-btn" aria-label="Create">
+        <svg class="icon-outline" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect>
+          <line x1="12" y1="8" x2="12" y2="16" stroke-linecap="round"></line>
+          <line x1="8" y1="12" x2="16" y2="12" stroke-linecap="round"></line>
+        </svg>
+      </button>
+
+      <!-- 4. Reels -->
+      <a href="reels.html" class="mobile-nav-btn" aria-label="Reels">
+        <svg class="icon-outline" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect>
+          <path d="M16 2.5l-4 6M8 2.5l-4 6M12 8.5v13M2.5 8.5h19"></path>
+          <polygon points="10 12 15 15 10 18" fill="currentColor"></polygon>
+        </svg>
+      </a>
+
+      <!-- 5. Profile -->
+      <a href="index.html?view=profile" class="mobile-nav-btn mobile-profile-nav-btn" aria-label="Profile">
+        <div class="mobile-avatar-frame">
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=aura" alt="Avatar" class="mobile-user-avatar" />
+        </div>
+      </a>
+    </nav>
+
+    <!-- Slide-out Search Drawer -->
+    <div id="search-drawer" class="slide-drawer">
+      <div class="drawer-header">
+        <h3>Search</h3>
+        <button id="search-drawer-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div class="search-input-wrap">
+        <svg class="search-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-drawer-input" class="aura-input" placeholder="Search people and #hashtags" />
+      </div>
+      <div id="search-results-list" class="search-results-list"></div>
+    </div>
+
+    <!-- Slide-out Notifications Drawer -->
+    <div id="notifications-drawer" class="slide-drawer">
+      <div class="drawer-header">
+        <h3>Notifications</h3>
+        <button id="notifications-drawer-close" class="drawer-close-btn">✕</button>
+      </div>
+      <div id="notifications-list" class="notifications-list"></div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. MODALS (CREATE, NEW MESSAGE & CALL SIMULATION)
+       ========================================================================= -->
+
+  <!-- A. CREATE STUDIO MODAL -->
+  <div id="create-modal" class="aura-modal">
+    <div class="create-modal-dialog">
+      <div class="create-modal-header">
+        <button id="create-modal-back" class="create-nav-btn back" style="display:none;">Back</button>
+        <h3 id="create-modal-title">Create new post</h3>
+        <button id="create-modal-next" class="create-nav-btn next" style="display:none;">Next</button>
+        <button id="create-modal-close" class="modal-close-btn modal-close-trigger">✕</button>
+      </div>
+      <div class="create-mode-tabs-bar">
+        <button class="create-mode-tab active" data-mode="post">Post</button>
+        <button class="create-mode-tab" data-mode="reel">Reel</button>
+      </div>
+      <div id="create-modal-body" class="create-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- B. NEW MESSAGE COMPOSE MODAL -->
+  <div id="new-msg-modal" class="aura-modal">
+    <div class="modal-content-box" style="width: 100%; max-width: 440px; height: 500px; padding: 20px;">
+      <div class="create-modal-header" style="border:none; padding: 0 0 14px 0;">
+        <span class="create-header-title">New message</span>
+        <button id="new-msg-close-btn" class="drawer-close-btn modal-close-trigger">✕</button>
+      </div>
+      <div class="search-input-wrap" style="margin-bottom:12px;">
+        <input type="text" id="new-msg-search-input" class="aura-input" placeholder="Search people..." />
+      </div>
+      <div id="new-msg-users-list" style="overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- C. CALL SIMULATOR MODAL -->
+  <div id="call-simulation-modal" class="call-modal">
+    <div class="call-modal-container">
+      <!-- Remote Partner Stage -->
+      <div class="call-remote-stage">
+        <!-- Partner pulsating avatar in audio or connecting state -->
+        <div class="call-partner-display" id="call-partner-display">
+          <div class="call-avatar-pulse-wrap">
+            <img id="call-partner-avatar" src="" class="call-partner-avatar" />
+            <div class="call-pulse-ring"></div>
+          </div>
+          <h3 id="call-partner-name" class="call-partner-name">Calling...</h3>
+          <span id="call-status-label" class="call-status-label">Calling...</span>
+        </div>
+
+        <!-- Simulated Remote Video Feed -->
+        <div id="call-remote-video-wrap" class="call-remote-video-wrap" style="display:none;">
+          <div class="call-simulated-partner-feed">
+            <img id="call-remote-partner-bg" src="" class="call-partner-bg-img" />
+            <div class="call-partner-feed-overlay">
+              <span class="call-partner-badge" id="call-partner-video-name">user</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Local Camera Preview PiP (Picture-in-Picture) -->
+        <div id="call-local-pip" class="call-local-pip" style="display:none;">
+          <video id="call-local-video" playsinline muted autoplay></video>
+          <div class="call-pip-label">You</div>
+        </div>
+      </div>
+
+      <!-- Call Action Controls Toolbar -->
+      <div class="call-controls-toolbar">
+        <button id="call-toggle-mic-btn" class="call-action-btn" title="Mute/Unmute Mic" aria-label="Microphone">
+          <svg class="icon-mic-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <svg class="icon-mic-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+
+        <button id="call-toggle-cam-btn" class="call-action-btn" title="Turn Camera On/Off" aria-label="Camera">
+          <svg class="icon-cam-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          <svg class="icon-cam-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M21 15.5l-5-3.5v-3l5-3.5v10z"></path>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </button>
+
+        <button id="call-end-btn" class="call-end-btn" title="End Call" aria-label="End Call">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path>
+            <line x1="23" y1="1" x2="1" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Dedicated Messages Page Controller -->
+  <script type="module" src="js/messages-page.js"></script>
+</body>
+</html>

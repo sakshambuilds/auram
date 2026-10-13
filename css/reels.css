@@ -1,0 +1,492 @@
+/**
+ * Aura - Instagram Reels Styles
+ * Vertical Snap-Scroll Scroller, Floating Right Column, Spinning Audio Disc & Marquee
+ */
+
+#view-reels {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  scrollbar-width: none;
+}
+#view-reels::-webkit-scrollbar {
+  display: none;
+}
+
+.reels-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.aura-reel-card {
+  scroll-snap-align: center;
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: calc(100vh - 36px);
+  max-height: 820px;
+  background: #000;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  #view-reels {
+    height: calc(100dvh - 48px - env(safe-area-inset-bottom, 0px));
+    padding: 0;
+    margin-top: 0;
+  }
+
+  .reels-container {
+    gap: 0;
+    width: 100vw;
+  }
+
+  .aura-reel-card {
+    height: calc(100dvh - 48px - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 48px - env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    border: none;
+    max-width: 100vw;
+    width: 100vw;
+  }
+
+  .reel-bottom-info {
+    bottom: 16px;
+    left: 12px;
+    right: 66px;
+  }
+
+  .reel-actions-column {
+    bottom: 16px;
+    right: 10px;
+    gap: 16px;
+  }
+
+  .reel-comments-sheet {
+    max-width: 100vw;
+    width: 100vw;
+    left: 0;
+    transform: translateY(100%);
+    height: 70dvh;
+    border-radius: 18px 18px 0 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .reel-comments-sheet.active {
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+.reel-video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.reel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+/* Play/Pause Center Indicator */
+.reel-playback-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.reel-playback-indicator.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Bottom Progress Track */
+.reel-progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 20;
+}
+
+.reel-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #fff;
+  transition: width 0.1s linear;
+}
+
+/* Floating Action Column */
+.reel-actions-column {
+  position: absolute;
+  bottom: 24px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  z-index: 25;
+}
+
+.reel-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+  transition: transform var(--transition-fast);
+}
+
+.reel-action-btn:hover {
+  transform: scale(1.15);
+}
+
+.reel-stat-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Spinning Vinyl Disc */
+.reel-audio-disc {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 3px solid #222;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  animation: spinDisc 4s linear infinite;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.disc-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes spinDisc {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Bottom Information Overlay */
+.reel-bottom-info {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #fff;
+  z-index: 20;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+.reel-author-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reel-author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.reel-author-username {
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reel-follow-btn {
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+.reel-follow-btn.following {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.reel-caption-wrap {
+  font-size: 14px;
+  line-height: 1.35;
+  max-height: 54px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Audio Marquee Ticker */
+.reel-audio-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.marquee-track {
+  white-space: nowrap;
+  animation: marqueeScroll 10s linear infinite;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Reel Comments Slide-over Sheet */
+.reel-comments-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  width: 100%;
+  max-width: 440px;
+  height: 60vh;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  z-index: 500;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.reel-comments-sheet.active {
+  transform: translate(-50%, 0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 700;
+}
+
+.reel-comments-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reel-comment-item {
+  display: flex;
+  gap: 12px;
+}
+
+.reel-cmt-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reel-cmt-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.reel-cmt-user {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.reel-cmt-text {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.sheet-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* =========================================================================
+   STANDALONE REELS PAGE STYLES (reels.html)
+   ========================================================================= */
+
+.reels-standalone-page {
+  background: #000;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.reels-page-stage {
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  scrollbar-width: none;
+}
+.reels-page-stage::-webkit-scrollbar {
+  display: none;
+}
+
+.reels-standalone-top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  padding-top: env(safe-area-inset-top, 0px);
+  z-index: 95;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.reels-standalone-top-bar * {
+  pointer-events: auto;
+}
+
+.reels-page-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reels-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.reels-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.reels-top-icon-btn {
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.reels-top-icon-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.08);
+}
+
+/* Floating Desktop Next/Prev Arrow Controls */
+.reels-desktop-nav-arrows {
+  position: fixed;
+  right: calc(50% - 290px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 85;
+}
+
+@media (max-width: 1024px) {
+  .reels-desktop-nav-arrows {
+    display: none;
+  }
+}
+
+.reels-floating-arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.reels-floating-arrow:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.12);
+}
+
+@media (max-width: 768px) {
+  .reels-page-stage {
+    height: calc(100dvh - 48px - env(safe-area-inset-bottom, 0px));
+  }
+}
+

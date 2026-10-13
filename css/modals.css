@@ -1,0 +1,859 @@
+/**
+ * Aura - Modals (Create Studio, Edit Profile, Post Detail, Options Menu)
+ */
+
+/* Modal Base */
+.aura-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.aura-modal.active {
+  display: flex;
+  animation: modalFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalScale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScale {
+  from { transform: scale(0.94); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================
+   CREATE STUDIO MODAL
+   ========================================== */
+.create-modal-container {
+  width: 100%;
+  max-width: 840px;
+  min-height: 580px;
+  max-height: 90vh;
+}
+
+.create-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.create-tabs-bar {
+  display: flex;
+  gap: 8px;
+}
+
+.create-mode-tab {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.create-mode-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.create-mode-tab.active {
+  color: #fff;
+  background: var(--accent-color);
+}
+
+.create-header-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.create-nav-action-btn {
+  color: var(--accent-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.create-close-icon {
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-close-icon:hover {
+  color: var(--text-primary);
+}
+
+.create-modal-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+/* Source Step: Drop Zone & Camera Stage */
+.create-source-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 60px 40px;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 500px;
+  transition: all var(--transition-fast);
+}
+
+.drop-zone.drag-active {
+  border-color: var(--accent-color);
+  background: var(--bg-hover);
+}
+
+.drop-zone h4 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.drop-zone-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.source-buttons-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Live Camera Stage inside Create */
+.camera-stage {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 520px;
+  background: #000;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#create-camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  z-index: 10;
+}
+
+.snap-photo-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: transparent;
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+.snap-photo-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.record-video-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 4px solid #ef4444;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ef4444;
+  transition: all var(--transition-fast);
+}
+
+.record-video-btn.recording .record-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.record-timer {
+  position: absolute;
+  top: -40px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ef4444;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cam-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* Edit Step Layout */
+.create-edit-layout {
+  display: flex;
+  width: 100%;
+  height: 520px;
+}
+
+.edit-media-stage {
+  flex: 1.4;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.edit-media-stage img, .edit-media-stage video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.edit-sidebar {
+  flex: 1;
+  border-left: 1px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-tabs-row {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.edit-subtab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+}
+.edit-subtab.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--text-primary);
+}
+
+.filters-panel, .adjustments-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+}
+
+.presets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.filter-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+}
+.filter-chip.active {
+  border-color: var(--accent-color);
+}
+
+.filter-thumb-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-thumb-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.filter-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.slider-group {
+  margin-bottom: 18px;
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.aura-slider {
+  width: 100%;
+  accent-color: var(--accent-color);
+}
+
+/* Caption Step Layout */
+.create-caption-layout {
+  display: flex;
+  width: 100%;
+  height: 520px;
+}
+
+.caption-media-preview {
+  flex: 1.2;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.caption-thumb {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.caption-form-section {
+  flex: 1;
+  border-left: 1px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  overflow-y: auto;
+}
+
+.caption-user-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.caption-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.caption-user-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.caption-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.caption-meta-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* Upload Progress Bar */
+.upload-progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--aura-gradient);
+  transition: width 0.2s ease;
+}
+
+.upload-status-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ==========================================
+   EDIT PROFILE MODAL
+   ========================================== */
+.edit-profile-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 24px;
+}
+
+.edit-profile-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-secondary);
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+}
+
+.edit-prof-avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-prof-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-prof-username {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.change-photo-btn {
+  color: var(--accent-color);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.char-counter {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ==========================================
+   POST DETAIL MODAL
+   ========================================== */
+.post-detail-box {
+  width: 100%;
+  max-width: 960px;
+  height: 85vh;
+  display: flex;
+}
+
+.modal-post-media-stage {
+  flex: 1.4;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-media-elem {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-post-comments-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-color);
+}
+
+.modal-comments-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modal-comments-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-comment-row {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modal-comment-content {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.comment-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Options Modal */
+.options-modal-box {
+  width: 100%;
+  max-width: 320px;
+  padding: 6px;
+}
+
+.options-modal-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.opt-btn {
+  padding: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-fast);
+}
+.opt-btn:last-child {
+  border-bottom: none;
+}
+.opt-btn:hover {
+  background: var(--bg-hover);
+}
+.opt-danger {
+  color: var(--like-color);
+  font-weight: 700;
+}
+.opt-cancel {
+  color: var(--text-secondary);
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS (< 768px)
+   ========================================== */
+@media (max-width: 768px) {
+  .aura-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .create-modal-container {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+  }
+
+  .create-modal-header {
+    padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 10px 14px;
+  }
+
+  .create-edit-layout {
+    flex-direction: column;
+    height: calc(100dvh - 54px - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+  }
+
+  .edit-media-stage {
+    width: 100%;
+    height: 42vh;
+    max-height: 320px;
+    flex: none;
+  }
+
+  .edit-sidebar {
+    width: 100%;
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .create-caption-layout {
+    flex-direction: column;
+    height: calc(100dvh - 54px - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+  }
+
+  .caption-media-preview {
+    width: 100%;
+    height: 28vh;
+    max-height: 200px;
+    flex: none;
+  }
+
+  .caption-form-section {
+    width: 100%;
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding: 14px;
+  }
+
+  .camera-stage {
+    max-height: calc(100dvh - 120px);
+    height: 100%;
+    border-radius: 0;
+  }
+
+  /* Slide-up Comments Bottom Sheet */
+  .comments-sheet-modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .sheet-drag-handle {
+    width: 38px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+    margin: 8px auto 4px auto;
+    flex-shrink: 0;
+  }
+
+  .post-detail-box {
+    flex-direction: column;
+    width: 100vw;
+    height: 72dvh;
+    max-height: 85dvh;
+    max-width: 100vw;
+    border-radius: 18px 18px 0 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-card);
+    animation: sheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes sheetSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-post-media-stage {
+    display: none; /* Focus directly on comments in native mobile sheet */
+  }
+
+  .modal-post-comments-panel {
+    width: 100%;
+    flex: 1;
+    border-left: none;
+    border-top: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .modal-comments-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 0.5px solid var(--border-color);
+  }
+
+  .comments-sheet-title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .modal-comments-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .quick-emojis-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 6px 10px;
+    border-top: 0.5px solid var(--border-color);
+    background: var(--bg-card);
+    flex-shrink: 0;
+  }
+
+  .quick-emoji-btn {
+    font-size: 20px;
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+  }
+
+  .quick-emoji-btn:active {
+    transform: scale(1.3);
+  }
+
+  .sheet-footer {
+    padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px)) 14px;
+    border-top: 0.5px solid var(--border-color);
+    background: var(--bg-card);
+    flex-shrink: 0;
+  }
+
+  .comment-author-avatar.my-comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  /* Edit Profile Modal */
+  .edit-profile-card {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 20px 16px;
+    overflow-y: auto;
+  }
+
+  /* Slide-up Options Modal */
+  .options-modal-box {
+    max-width: 100%;
+    width: 100%;
+    border-radius: 18px 18px 0 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+    padding: 8px 12px calc(14px + env(safe-area-inset-bottom, 0px)) 12px;
+    animation: sheetSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Slide-up Likes / Followers / Share Modals */
+  #likes-modal .modal-content-box,
+  #followers-modal .modal-content-box,
+  #share-modal .modal-content-box {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    border-radius: 18px 18px 0 0 !important;
+    border: none !important;
+    border-top: 1px solid var(--border-color) !important;
+    margin-top: auto;
+    max-height: 70dvh !important;
+    animation: sheetSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}

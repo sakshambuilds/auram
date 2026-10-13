@@ -1,0 +1,244 @@
+/**
+ * Aura - Instagram Stories Fullscreen Viewer Styles
+ * Segmented Top Progress Bars, Interactive Tap Zones & Quick Reactions
+ */
+
+.story-viewer-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+}
+
+.story-viewer-modal.active {
+  display: flex;
+}
+
+.story-viewer-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 94vh;
+  max-height: 840px;
+  background: #111;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .story-viewer-container {
+    height: 100dvh;
+    max-height: 100dvh;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+  }
+
+  .story-progress-bars {
+    top: calc(10px + env(safe-area-inset-top, 0px));
+  }
+
+  .story-viewer-header {
+    top: calc(20px + env(safe-area-inset-top, 0px));
+  }
+
+  .story-viewer-footer {
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Segmented Top Progress Bars */
+.story-progress-bars {
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+}
+
+.story-progress-bar {
+  flex: 1;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.story-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #ffffff;
+}
+
+/* Story Header */
+.story-viewer-header {
+  position: absolute;
+  top: 24px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 30;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.story-header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.story-viewer-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  object-fit: cover;
+}
+
+.story-viewer-username {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.story-viewer-time {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.story-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.story-icon-btn {
+  color: #fff;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+.story-icon-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Media Stage & Tap Zones */
+.story-viewer-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-image-player, .story-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-tap-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.story-tap-left {
+  left: 0;
+  width: 30%;
+}
+
+.story-tap-right {
+  right: 0;
+  width: 70%;
+}
+
+/* Floating Caption */
+.story-viewer-caption {
+  position: absolute;
+  bottom: 80px;
+  left: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  line-height: 1.4;
+  z-index: 25;
+}
+
+/* Bottom Reply & Quick Reactions */
+.story-viewer-footer {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 30;
+}
+
+.story-quick-reactions {
+  display: flex;
+  justify-content: space-around;
+  padding: 4px 8px;
+}
+
+.story-quick-react-btn {
+  font-size: 22px;
+  transition: transform var(--transition-fast);
+}
+.story-quick-react-btn:hover {
+  transform: scale(1.35);
+}
+
+.story-reply-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+}
+
+.story-reply-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+}
+.story-reply-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.story-reply-send-btn {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
